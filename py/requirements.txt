@@ -1,0 +1,6 @@
+# General libraries for data processing and communication
+numpy>=1.21.0
+pandas>=1.3.0
+requests>=2.26.0
+python-can>=4.0.0  # CAN 통신
+pyserial>=3.5      # 시리얼 통신 
