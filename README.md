@@ -16,6 +16,7 @@ Solution: Binding the encrypted storage to unique hardware identifiers (CPU Seri
 🤖 Zero-TouchTwo-stage orchestration handles everything from partitioning to reboot setup.
 🛡️ Self-CleaningAutomatically removes installation scripts post-setup to prevent reverse engineering.
 🗄️ Service IntegrityEnsures encrypted vault is ready before services like MariaDB start.
+
 📁 <font size="6">Project Structure</font>
 ├── 📂 src/
 │   ├── 📄 keygen.c        # Hardware-bound key derivation logic
