@@ -12,6 +12,23 @@
 ## 📖 Overview
 This project provides a robust, **two-stage automated installation process**. It focuses on hardware-level data security through **LUKS encryption** and zero-touch deployment using orchestrated systemd services.
 
+## 🏗️ System Architecture & Partition Layout
+The system is designed to isolate the immutable OS from the encrypted data vault.
+
+
+- **Partition 1 (SDA1/Boot):** Standard bootloader & kernel config.
+- **Partition 2 (SDA2/RootFS):** Optimized 12GB immutable OS layer.
+- **Partition 3 (SDA3/Vault):** Hardware-bound LUKS encrypted storage for sensitive data.
+
+
+## 🛠️ Golden Image Creation Workflow
+To ensure rapid mass deployment, a "Golden Image" strategy was implemented:
+
+1. **Shrink & Optimize:** Reduced the live filesystem to a 12GB footprint using `resize2fs`.
+2. **Sector-Level Extraction:** Utilized `dd` to capture only the populated sectors, leaving 110MB of trailing free space to ensure compatibility across different 32GB EMMC vendors.
+3. **High-Ratio Compression:** Achieved a **97% compression rate** (31GB -> 808MB) for efficient network distribution.
+
+  
 ### 🎯 Problem & Solution
 * **Problem**: Unauthorized disk cloning and data theft of embedded devices.
 * **Solution**: Binding the encrypted storage to unique hardware identifiers (CPU Serial/SD CID) to ensure data stays on the designated hardware.
@@ -41,3 +58,22 @@ This project provides a robust, **two-stage automated installation process**. It
 ├── 📂 configs/
 │   └── 📄 secure-deploy.service # systemd unit template
 └── 📄 README.md
+
+
+
+## 💡 Engineering Challenges & Troubleshooting
+
+### **Issue: Zero-byte file generation during image extraction**
+- **Symptoms:** Installation scripts appeared as 0-byte files in the flashed image despite successful copying.
+- **Root Cause:** Kernel write cache latency and `sync` command omission before `dd` extraction.
+- **Solution:** - Forced filesystem synchronization using `sync`.
+  - Implemented automated log rotation/cleanup to prevent disk-full errors during the extraction process.
+  - Verified image integrity using loopback devices (`losetup`) before final release.
+
+
+
+## 🛠️ Usage
+1. Flash the golden image to your Raspberry Pi.
+2. The `secure-deploy.service` will trigger `deploy.sh` on first boot.
+3. The system will automatically partition, encrypt, and reboot.
+4. Post-reboot, the encrypted volume is automatically mounted, and the deployment scripts are securely wiped.
