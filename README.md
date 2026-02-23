@@ -46,20 +46,6 @@ To ensure rapid mass deployment, a "Golden Image" strategy was implemented:
 
 ---
 
-## 📁 Project Structure
-
-```text
-├── 📂 src/
-│   ├── 📄 keygen.c        # Hardware-bound key derivation logic
-│   └── 📄 unlocker.c      # Boot-time LUKS auto-unlock utility
-├── 📂 scripts/
-│   ├── 📄 deploy.sh       # Main orchestrator (Phase 1)
-│   └── 📄 post_install.sh # Post-reboot environment setup (Phase 2)
-├── 📂 configs/
-│   └── 📄 secure-deploy.service # systemd unit template
-└── 📄 README.md
-
-'''
 
 ## 💡 Engineering Challenges & Troubleshooting
 
@@ -77,3 +63,18 @@ To ensure rapid mass deployment, a "Golden Image" strategy was implemented:
 2. The `secure-deploy.service` will trigger `deploy.sh` on first boot.
 3. The system will automatically partition, encrypt, and reboot.
 4. Post-reboot, the encrypted volume is automatically mounted, and the deployment scripts are securely wiped.
+
+---
+
+## 📁 Project Structure
+
+```text
+├── 📂 src/
+│   ├── 📄 keygen.c        # Hardware-bound key derivation logic
+│   └── 📄 unlocker.c      # Boot-time LUKS auto-unlock utility
+├── 📂 scripts/
+│   ├── 📄 deploy.sh       # Main orchestrator (Phase 1)
+│   └── 📄 post_install.sh # Post-reboot environment setup (Phase 2)
+├── 📂 configs/
+│   └── 📄 secure-deploy.service # systemd unit template
+└── 📄 README.md
